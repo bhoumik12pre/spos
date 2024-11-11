@@ -1,0 +1,181 @@
+Q7. Write a program to simulate CPU Scheduling Algorithms: Priority (Non-Preemptive)
+
+1. Set Up Eclipse Project:
+Open Eclipse IDE.
+Go to File > New > Java Project.
+Name the project (e.g., PriorityScheduling).
+Click Finish to create the project.
+2. Create a New Package:
+In the Package Explorer, right-click on the src folder under your new project.
+Select New > Package.
+Name the package Priority (or any name you prefer).
+Click Finish.
+3. Create a New Java Class:
+Right-click on the Priority package you just created.
+Select New > Class.
+Name the class Priority.
+Make sure the public static void main(String[] args) checkbox is selected.
+Click Finish.
+4. Copy the Code:
+Copy your entire code and paste it into the newly created Priority.java class in Eclipse.
+5. Run the Program:
+Once the code is in place, right-click on the Priority.java file in the Package Explorer.
+Select Run As > Java Application.
+6. Input Data:
+The program will prompt you to enter the number of processes and their burst times and priorities.
+Input the values when prompted and press Enter.
+7. View Output:
+After entering the inputs, the program will display the scheduling results, showing the processes' burst time, waiting time, turnaround time, and priority before and after scheduling.
+8. Troubleshooting:
+If you encounter errors, check for typos in the code or ensure that the package and class names match.
+Ensure that the Java Development Kit (JDK) is properly installed and configured in Eclipse.
+
+
+package Priority;
+
+import java.util.Scanner;
+
+public class Priority {
+    int Count = 0;
+    int[][] processData;
+    Scanner scan = new Scanner(System.in);
+
+    public static void main(String a[]) {
+        System.out.println("\n\n***********Priority Scheduling :***********\n");
+        Priority Prio = new Priority();
+        Prio.setValue();
+        System.out.println("\n\nBefore Scheduling\n");
+        Prio.DisplayValue();
+        Prio.schedulePriority();
+        System.out.println("\n\nAfter Scheduling\n");
+        Prio.DisplayValue();
+    }
+
+    public void schedulePriority() {
+        scheduleSorting();
+        scheduleCalculation();
+    }
+
+    public void scheduleSorting() {
+        for (int i = 0; i < Count; i++) {
+            int processIndex = i;
+            int processPriority = processData[i][4];
+            for (int j = i + 1; j < Count; j++) {
+                if (processPriority > processData[j][4]) {
+                    processPriority = processData[j][4];
+                    processIndex = j; // Correcting the assignment
+                }
+            }
+            swapProcess(i, processIndex);
+        }
+    }
+
+    public void swapProcess(int p1, int p2) {
+        int[] temp = processData[p1];
+        processData[p1] = processData[p2];
+        processData[p2] = temp;
+    }
+
+    public void scheduleCalculation() {
+        processData[0][2] = 0; // Waiting time for the first process is 0
+        processData[0][3] = processData[0][1]; // Turnaround time is burst time for the first process
+        for (int i = 1; i < Count; i++) {
+            processData[i][2] = processData[i - 1][3]; // Waiting time for current process
+            processData[i][3] = processData[i][1] + processData[i][2]; // Turnaround time calculation
+        }
+    }
+
+    public void setValue() {
+        System.out.print("Enter Number Of processes : ");
+        Count = scan.nextInt();
+        processData = new int[Count][5];
+        for (int i = 0; i < Count; i++) {
+            System.out.println("Processes[" + i + "] :-> ");
+            processData[i][0] = i;
+            System.out.print("\t\tBurst Time[" + i + "] :-> ");
+            processData[i][1] = scan.nextInt();
+            System.out.print("\t\tPriority[" + i + "] :-> ");
+            processData[i][4] = scan.nextInt();
+        }
+    }
+
+    public void DisplayValue() {
+        System.out.println("--------------------------------------------------------------------------------------");
+        System.out.println("Process Number || Burst Time || Waiting Time || Turn Around Time || Priority");
+        System.out.println("--------------------------------------------------------------------------------------");
+        for (int i = 0; i < Count; i++) {
+            System.out.println("Processes[" + processData[i][0] + "]\t||\t" + processData[i][1] + "\t||\t"
+                    + processData[i][2] + "\t||\t" + processData[i][3] + "\t||\t" + processData[i][4]);
+        }
+        System.out.println("---------------------------------------------------------------------------------------");
+    }
+}
+
+
+
+
+
+
+Certainly! Below are sample inputs and expected outputs to help you verify that the Priority Scheduling (Non-Preemptive) algorithm works correctly.
+
+Sample Input:
+ruby
+Copy code
+Enter Number Of processes : 4
+Processes[0] :-> 
+        Burst Time[0] :-> 6
+        Priority[0] :-> 2
+Processes[1] :-> 
+        Burst Time[1] :-> 2
+        Priority[1] :-> 1
+Processes[2] :-> 
+        Burst Time[2] :-> 8
+        Priority[2] :-> 3
+Processes[3] :-> 
+        Burst Time[3] :-> 3
+        Priority[3] :-> 4
+Explanation of Input:
+4 processes in total.
+Process 0: Burst Time = 6, Priority = 2
+Process 1: Burst Time = 2, Priority = 1
+Process 2: Burst Time = 8, Priority = 3
+Process 3: Burst Time = 3, Priority = 4
+Expected Output:
+Before Scheduling:
+css
+Copy code
+--------------------------------------------------------------------------------------
+Process Number || Burst Time || Waiting Time || Turn Around Time || Priority
+--------------------------------------------------------------------------------------
+Processes[0]  ||    6        ||      0        ||       6           ||     2
+Processes[1]  ||    2        ||      0        ||       2           ||     1
+Processes[2]  ||    8        ||      0        ||       8           ||     3
+Processes[3]  ||    3        ||      0        ||       3           ||     4
+--------------------------------------------------------------------------------------
+After Scheduling:
+css
+Copy code
+--------------------------------------------------------------------------------------
+Process Number || Burst Time || Waiting Time || Turn Around Time || Priority
+--------------------------------------------------------------------------------------
+Processes[1]  ||    2        ||      0        ||       2           ||     1
+Processes[0]  ||    6        ||      2        ||       8           ||     2
+Processes[2]  ||    8        ||      8        ||       16          ||     3
+Processes[3]  ||    3        ||      16       ||       19          ||     4
+--------------------------------------------------------------------------------------
+Step-by-step Explanation of Output:
+Before Scheduling:
+
+The program lists the processes with their respective burst times and priorities. At this stage, no calculations are made for waiting and turnaround times.
+After Scheduling (Priority Sorting):
+
+Process 1 has the highest priority (Priority 1), so it will be executed first. It has a burst time of 2.
+Process 0 has Priority 2, so it executes next. Its waiting time will be the turnaround time of Process 1, which is 2, and its turnaround time will be its burst time (6) + waiting time (2) = 8.
+Process 2 has Priority 3, so it runs after Process 0. Its waiting time will be the turnaround time of Process 0, which is 8, and its turnaround time will be its burst time (8) + waiting time (8) = 16.
+Process 3 has the lowest priority (Priority 4), so it runs last. Its waiting time will be the turnaround time of Process 2, which is 16, and its turnaround time will be its burst time (3) + waiting time (16) = 19.
+How to Verify:
+Check Process Order: The processes are ordered by their priority, with lower numbers indicating higher priority.
+Check Waiting Times: The waiting time of each process should be the sum of burst times of previous processes.
+Check Turnaround Times: The turnaround time should be the burst time plus the waiting time for each process.
+
+

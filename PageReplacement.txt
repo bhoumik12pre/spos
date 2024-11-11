@@ -1,0 +1,112 @@
+Q9. Write a program to simulate Page replacement algorithm.
+
+Step-by-Step Instructions:
+Open Eclipse IDE:
+
+Launch Eclipse on your system.
+Create a New Java Project:
+
+Click on File > New > Java Project.
+Enter a Project Name (e.g., PageReplacement).
+Click on Finish.
+Create a New Java Class:
+
+Right-click on the src folder inside your project in the Package Explorer.
+Select New > Class.
+Name the class PgReplacement (or any name you prefer).
+Ensure that the public static void main(String[] args) method is checked to create the main method automatically.
+Click Finish.
+Copy and Paste the Code:
+
+Copy the corrected code provided in the previous response.
+Paste the code inside the PgReplacement.java file in Eclipse (inside the editor window).
+java
+Copy code
+
+
+package PgReplacement;
+
+import java.util.*;
+
+public class PgReplacement {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Get input: number of frames and reference string
+        System.out.print("Enter the number of frames: ");
+        int framesCount = scanner.nextInt();
+        
+        System.out.print("Enter the number of pages in the reference string: ");
+        int pagesCount = scanner.nextInt();
+        
+        int[] pages = new int[pagesCount];
+        System.out.println("Enter the page reference string:");
+        for (int i = 0; i < pagesCount; i++) {
+            pages[i] = scanner.nextInt();
+        }
+        
+        // Call LRU Page Replacement
+        int pageFaults = pageReplacementLRU(framesCount, pages);
+        System.out.println("Total Page Faults using LRU: " + pageFaults);
+        
+        scanner.close();
+    }
+
+    public static int pageReplacementLRU(int framesCount, int[] pages) {
+        List<Integer> frames = new ArrayList<>(framesCount);
+        Map<Integer, Integer> lastUsed = new HashMap<>();
+        int pageFaults = 0;
+        
+        for (int i = 0; i < pages.length; i++) {
+            int page = pages[i];
+            
+            if (!frames.contains(page)) {
+                // Page fault occurs
+                if (frames.size() == framesCount) {
+                    // Find the least recently used page
+                    int lruPage = Collections.min(lastUsed.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
+                    frames.remove(Integer.valueOf(lruPage));
+                    lastUsed.remove(lruPage);
+                }
+                
+                frames.add(page);
+                pageFaults++;
+            }
+            
+            // Update last used time for the current page
+            lastUsed.put(page, i);
+        }
+        
+        return pageFaults;
+    }
+}
+
+
+Save the File:
+
+Click Ctrl + S or go to File > Save to save the changes.
+Run the Program:
+
+To run the program, click the Run button (green circle with a white arrow) in the top toolbar, or press Ctrl + F11.
+A console window will open at the bottom of Eclipse.
+Enter Inputs:
+
+The program will ask for:
+The number of frames.
+The number of pages in the reference string.
+The page reference string.
+Enter these values in the console, and press Enter after each input.
+Example:
+mathematica
+Copy code
+Enter the number of frames: 3
+Enter the number of pages in the reference string: 12
+Enter the page reference string:
+7 0 1 2 0 3 0 4 2 3 0 3
+View the Output:
+After you provide the input, the program will display the total number of page faults using the Least Recently Used (LRU) page replacement algorithm.
+Example Output:
+
+arduino
+Copy code
+Total Page Faults using LRU: 9

@@ -1,0 +1,223 @@
+Q8. Write a program to simulate CPU Scheduling Algorithms: Round Robin (Preemptive)
+
+
+Step 2: Create a New Java Project in Eclipse
+Open Eclipse.
+Click on File > New > Java Project.
+In the Project Name field, enter a name for your project, such as RoundRobinScheduler.
+Click Finish.
+Step 3: Create a New Java Class
+Right-click on the src folder inside the RoundRobinScheduler project (in the Project Explorer on the left side).
+Select New > Class.
+In the Class Name field, type RoundRobin (this should match the name of the class in the provided code).
+Check the box for public static void main(String[] args) to generate the main method.
+Click Finish.
+Step 4: Paste the Code
+In the newly created RoundRobin.java file, paste the code you received earlier.
+The entire code should now be visible in the editor window in Eclipse.
+Step 5: Save the File
+Click File > Save, or use the shortcut Ctrl + S to save your file.
+Step 6: Run the Program
+To run the program, click on the Run button (green triangle) in the Eclipse toolbar, or press Ctrl + F11.
+If the program runs successfully, you’ll see the console output at the bottom of Eclipse.
+Step 7: Provide Input in the Console
+When the program starts, Eclipse will display a prompt in the Console tab. Enter the required input (number of processes, RTT, burst times) as follows:
+
+Enter the number of processes (e.g., 3).
+Enter the round-trip time (RTT) (e.g., 5).
+Enter the burst times for each process when prompted.
+The program will process these inputs and simulate Round Robin scheduling, displaying the results in the Console.
+
+
+
+package RoundRobin;
+
+import java.util.Scanner;
+
+public class RoundRobin {
+    int Count = 0; 
+    int[][] processData;
+    int[] CCycle; // Complete Cycle
+    int[] PCycle; // Partial Cycle
+    int[] TCycle; // Total Cycle
+    String[] Queue; 
+    boolean[] Status; 
+    int[] startQue; 
+    int[] endQue; 
+    int RTT = 0;
+    Scanner scan = new Scanner(System.in);
+
+    public void scheduleRR() { 
+        int TotalProcess = CCycle.length;
+        int time = 0; // Track the current time
+        int j = 0; // For queue index
+        for (int i = 0; i < TotalProcess;) {
+            int ProNo = i % TotalProcess;
+            if (CCycle[ProNo] > 0) {
+                // Process executes for one round
+                Queue[j] = "process[" + ProNo + "]";
+                startQue[j] = time;
+                endQue[j] = time + Math.min(RTT, CCycle[ProNo]) - 1;
+                CCycle[ProNo] -= RTT;
+                time = endQue[j] + 1;
+                j++;
+                i++; // Proceed to next process in round robin
+            } else {
+                i++; // Skip already finished processes
+            }
+        }
+        System.out.println("Queue : start : End : Interval : ");
+        for (int i = 0; i < Queue.length; i++) {
+            int temp = (endQue[i] - startQue[i] + 1);
+            System.out.println(" " + Queue[i] + " " + startQue[i] + " " + endQue[i] + " " + temp);
+        }
+    }
+
+    public void setValue() {
+        System.out.print("Enter Number Of processes : ");
+        Count = scan.nextInt();
+        System.out.print("Enter Round Trip Time : "); 
+        RTT = scan.nextInt();
+        processData = new int[Count][4];
+        CCycle = new int[Count];
+        PCycle = new int[Count];
+        TCycle = new int[Count];
+        for (int i = 0; i < Count; i++) {
+            System.out.print("Processes[" + i + "] :-> ");
+            processData[i][0] = i;
+            processData[i][1] = scan.nextInt();
+            CCycle[i] = processData[i][1] / RTT;
+            PCycle[i] = processData[i][1] % RTT;
+            if (PCycle[i] == 0) {
+                TCycle[i] = CCycle[i]; 
+            } else {
+                TCycle[i] = CCycle[i] + 1;
+            }
+            System.out.println("P[" + i + "] CC : " + CCycle[i] + " PC : " + PCycle[i] + " TC : " + TCycle[i]);
+        }
+        Status = new boolean[Count];
+        for (int i = 0; i < Count; i++) {
+            Status[i] = false;
+        }
+        initQueue();
+    }
+
+    public void initQueue() {
+        int MaxQueLen = 0;
+        for (int i = 0; i < Count; i++) {
+            MaxQueLen = MaxQueLen + TCycle[i];
+        }
+        Queue = new String[MaxQueLen];
+        startQue = new int[MaxQueLen];
+        endQue = new int[MaxQueLen];
+        System.out.println("Queue Length : " + MaxQueLen);
+    }
+
+    public void DisplayValue() {
+        System.out.println("------------------------------------------------------------------------");
+        System.out.println("Process Number || Brust Time || Waiting Time || Turnaround Time");
+        System.out.println("------------------------------------------------------------------------");
+        for (int i = 0; i < Count; i++) {
+            System.out.println("Processes[" + processData[i][0] + "]\t||\t" + processData[i][1] + "\t||\t" + processData[i][2] + "\t||\t" + processData[i][3]);
+        }
+        System.out.println("-------------------------------------------------------------------------");
+    }
+
+    public static void main(String[] args) {
+        RoundRobin rr = new RoundRobin();
+        rr.setValue();
+        System.out.println("\n\n***********Round Robin : (RR) :***********\n");
+        System.out.println("\n\nBefore Scheduling\n");
+        rr.DisplayValue();
+        rr.scheduleRR();
+        System.out.println("\n\nAfter Scheduling\n"); 
+        rr.DisplayValue();
+    }
+}
+
+
+
+ure! Below is an example of the input you would provide to the Round Robin Scheduling algorithm and the output that you can expect when running the program in Eclipse.
+
+Example Input:
+When you run the program, the following prompts will appear in the Console:
+
+Enter Number of processes:
+
+Copy code
+3
+Enter Round Trip Time (RTT):
+
+Copy code
+4
+Enter Burst Time for each process (the time required for each process to complete its execution):
+
+ruby
+Copy code
+Processes[0] :-> 8
+Processes[1] :-> 6
+Processes[2] :-> 10
+Expected Output:
+Based on the input, the program will calculate the Round Robin scheduling and display the following results in the Console:
+
+Before Scheduling (Initial Values):
+markdown
+Copy code
+------------------------------------------------------------------------
+Process Number || Brust Time || Waiting Time || Turnaround Time
+------------------------------------------------------------------------
+Processes[0]	||	8	||	0	||	0
+Processes[1]	||	6	||	0	||	0
+Processes[2]	||	10	||	0	||	0
+-------------------------------------------------------------------------
+Queue, Start Time, End Time, Interval:
+After executing the Round Robin algorithm, the program will display the sequence of processes being scheduled:
+
+arduino
+Copy code
+Queue : start : End : Interval : 
+ process[0] 0 3 4
+ process[1] 4 7 4
+ process[2] 8 11 4
+ process[0] 12 14 3
+ process[1] 15 16 2
+ process[2] 17 19 3
+This means:
+
+Process[0] starts at time 0 and ends at time 3, running for 4 units of time.
+Process[1] starts at time 4 and ends at time 7, running for 4 units of time.
+Process[2] starts at time 8 and ends at time 11, running for 4 units of time.
+Process[0] continues from time 12 and ends at time 14, completing its remaining time slice.
+Process[1] runs from time 15 to 16, completing its remaining burst time.
+Process[2] runs from time 17 to 19, completing the remaining burst time.
+After Scheduling (Updated Values):
+The final output shows the processes with their waiting time and turnaround time:
+
+markdown
+Copy code
+------------------------------------------------------------------------
+Process Number || Brust Time || Waiting Time || Turnaround Time
+------------------------------------------------------------------------
+Processes[0]	||	8	||	6	||	14
+Processes[1]	||	6	||	5	||	11
+Processes[2]	||	10	||	6	||	16
+-------------------------------------------------------------------------
+Explanation of the Output:
+Process[0]:
+
+Burst Time = 8
+Waiting Time = 6 (waiting from time 4 to 12 while other processes executed)
+Turnaround Time = 14 (Total time from start to end: 0 to 14)
+Process[1]:
+
+Burst Time = 6
+Waiting Time = 5 (waiting from time 0 to 15 while other processes executed)
+Turnaround Time = 11 (Total time from start to end: 4 to 16)
+Process[2]:
+
+Burst Time = 10
+Waiting Time = 6 (waiting from time 0 to 17)
+Turnaround Time = 16 (Total time from start to end: 8 to 19)
+Additional Details:
+The Waiting Time is the total amount of time a process spends waiting in the queue before it gets executed.
+The Turnaround Time is the total time a process spends from arrival to completion, including both execution and waiting time.

@@ -1,0 +1,248 @@
+Q3. Design suitable data structures and implement Pass-I of a two-pass macro-processor.
+MACRO
+M1 &X, &Y, &A=AREG, &B=
+MOVER &A, &X
+ADD &A, ='1'
+MOVER &B, &Y
+ADD &B, ='5'
+MEND
+
+MACRO
+M2 &P, &Q, &U=CREG, &V=DREG
+MOVER &U, &P
+MOVER &V, &Q
+ADD &U, ='15'
+ADD &V, ='10'
+MEND
+START 100
+M1 10, 20, &B=CREG
+M2 100, 200, &V=AREG, &U=BREG
+END
+
+
+Create a New Java Project:
+
+Open Eclipse.
+Go to File -> New -> Java Project.
+Enter a project name, e.g., MacroProcessor, and click Finish.
+Create a New Java Class:
+
+Right-click on the src folder under your project in the Project Explorer panel.
+Select New -> Class.
+Name the class Macro1, check the option for the public static void main(String[] args) method, and click Finish.
+Add the Code:
+
+Copy the entire code (above) and paste it into the Macro1.java file.
+Run the Program:
+
+Right-click on Macro1.java in the Project Explorer and select Run As -> Java Application.
+The program will output the Macro Name Table (MNT), Macro Definition Table (MDT), Argument List Array (ALA), and Default Arguments followed by the expanded code for macro calls in Pass-II.
+Expected Output:
+The output will print:
+
+MNT showing macro names and their corresponding MDT indexes.
+MDT showing the instructions of the macro.
+ALA showing the argument list.
+Default Arguments showing any defaults used for arguments.
+The expanded code from Pass-II where macros like M1 and M2 are expanded with their respective values.
+
+
+
+
+
+package Macro1;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class Macro1 {
+    static class MNTEntry {
+        String macroName;
+        int mdtIndex;
+
+        MNTEntry(String macroName, int mdtIndex) {
+            this.macroName = macroName;
+            this.mdtIndex = mdtIndex;
+        }
+    }
+
+    static class MDTEntry {
+        String instruction;
+
+        MDTEntry(String instruction) {
+            this.instruction = instruction;
+        }
+    }
+
+    static List<MNTEntry> MNT = new ArrayList<>();
+    static List<MDTEntry> MDT = new ArrayList<>();
+    static Map<String, Integer> ALA = new HashMap<>();
+    static Map<String, String> defaultArguments = new HashMap<>();
+    static int mdtPointer = 0;
+
+    public static void main(String[] args) {
+        String[] input = {
+            "MACRO",
+            "M1 &X, &Y, &A=AREG, &B=",
+            "MOVER &A, &X",
+            "ADD &A, ='1'",
+            "MOVER &B, &Y",
+            "ADD &B, ='5'",
+            "MEND",
+            "MACRO",
+            "M2 &P, &Q, &U=CREG, &V=DREG",
+            "MOVER &U, &P",
+            "MOVER &V, &Q",
+            "ADD &U, ='15'",
+            "ADD &V, ='10'",
+            "MEND",
+            "START 100",
+            "M1 10, 20, &B=CREG",
+            "M2 100, 200, &V=AREG, &U=BREG",
+            "END"
+        };
+
+        pass1(input);
+        printTables();
+
+        // Now perform macro expansion in Pass-II
+        String[] programInput = {
+            "START 100",
+            "M1 10, 20, &B=CREG",
+            "M2 100, 200, &V=AREG, &U=BREG",
+            "END"
+        };
+        
+        pass2(programInput);
+    }
+
+    static void pass1(String[] input) {
+        boolean inMacroDefinition = false;
+        String macroName = null;
+
+        for (String line : input) {
+            String[] tokens = line.trim().split("\\s+");
+
+            if (tokens[0].equals("MACRO")) {
+                inMacroDefinition = true;
+            } else if (tokens[0].equals("MEND")) {
+                inMacroDefinition = false;
+                macroName = null;
+            } else if (inMacroDefinition) {
+                if (macroName == null) {
+                    macroName = tokens[0];
+                    MNT.add(new MNTEntry(macroName, mdtPointer));
+                    processALA(tokens);
+                } else {
+                    MDT.add(new MDTEntry(replaceArguments(line)));
+                    mdtPointer++;
+                }
+            }
+        }
+    }
+
+    static void processALA(String[] tokens) {
+        for (int i = 1; i < tokens.length; i++) {
+            String arg = tokens[i].replace(",", "");
+            String[] splitArg = arg.split("=");
+            if (splitArg.length == 1) {
+                ALA.put(splitArg[0], ALA.size() + 1);
+            } else {
+                ALA.put(splitArg[0], ALA.size() + 1);
+                defaultArguments.put(splitArg[0], splitArg[1]);
+            }
+        }
+    }
+
+    static String replaceArguments(String line) {
+        for (Map.Entry<String, Integer> entry : ALA.entrySet()) {
+            line = line.replace(entry.getKey(), "#" + entry.getValue());
+        }
+        return line;
+    }
+
+    static void printTables() {
+        System.out.println("Macro Name Table (MNT):");
+        for (int i = 0; i < MNT.size(); i++) {
+            System.out.println(i + " : " + MNT.get(i).macroName + " " + MNT.get(i).mdtIndex);
+        }
+
+        System.out.println("\nMacro Definition Table (MDT):");
+        for (int i = 0; i < MDT.size(); i++) {
+            System.out.println(i + " : " + MDT.get(i).instruction);
+        }
+
+        System.out.println("\nArgument List Array (ALA):");
+        for (Map.Entry<String, Integer> entry : ALA.entrySet()) {
+            System.out.println(entry.getKey() + " -> #" + entry.getValue());
+        }
+
+        System.out.println("\nDefault Arguments:");
+        for (Map.Entry<String, String> entry : defaultArguments.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        }
+    }
+
+    static void pass2(String[] input) {
+        for (String line : input) {
+            String[] tokens = line.trim().split("\\s+");
+
+            if (tokens[0].equals("M1") || tokens[0].equals("M2")) {
+                expandMacro(tokens);
+            } else {
+                System.out.println(line);
+            }
+        }
+    }
+
+    static void expandMacro(String[] tokens) {
+        String macroName = tokens[0];
+        int mdtIndex = -1;
+
+        for (MNTEntry entry : MNT) {
+            if (entry.macroName.equals(macroName)) {
+                mdtIndex = entry.mdtIndex;
+                break;
+            }
+        }
+
+        // Map the arguments passed during the macro call
+        Map<String, String> passedArguments = new HashMap<>();
+        for (int i = 1; i < tokens.length; i++) {
+            String[] tokenParts = tokens[i].split("=");
+            String argument = tokenParts[0].trim();
+            String value = (tokenParts.length > 1) ? tokenParts[1].trim() : null;
+            passedArguments.put(argument, value);
+        }
+
+        // Expand the macro by fetching MDT entries
+        while (mdtIndex < MDT.size()) {
+            String mdtInstruction = MDT.get(mdtIndex).instruction;
+            String expandedInstruction = replaceMacroArguments(mdtInstruction, passedArguments);
+            System.out.println(expandedInstruction);
+            mdtIndex++;
+        }
+    }
+
+    static String replaceMacroArguments(String instruction, Map<String, String> passedArguments) {
+        String expandedInstruction = instruction;
+        for (Map.Entry<String, String> entry : passedArguments.entrySet()) {
+            String argument = entry.getKey();
+            String value = entry.getValue();
+            if (value == null) {
+                value = defaultArguments.get(argument);
+            }
+
+            // If no value is found, handle it properly
+            if (value == null) {
+                System.out.println("Error: No value found for argument " + argument);
+                return instruction; // or handle error as needed
+            }
+
+            expandedInstruction = expandedInstruction.replace("&" + argument, value);
+        }
+        return expandedInstruction;
+    }
+}

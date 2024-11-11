@@ -1,0 +1,146 @@
+Q5. Write a program to simulate CPU Scheduling Algorithms: FCFS
+
+
+
+
+Step 1: Open Eclipse
+Launch Eclipse on your computer.
+
+Step 2: Create a New Java Project
+Go to File > New > Java Project.
+Enter a Project Name (e.g., FCFSSchedulingProject).
+Click Finish.
+
+Step 3: Create a New Package
+Right-click on the src folder in your new project.
+Select New > Package.
+Name the package (e.g., FCFS).
+Click Finish.
+
+Step 4: Create a New Java Class
+Right-click on the package you created (e.g., FCFS).
+Select New > Class.
+In the Name field, type FCFS.
+Check the box for public static void main(String[] args) to add the main method automatically.
+Click Finish.
+
+Step 5: Copy the Code
+Copy the revised code from the previous response.
+Paste the code into the FCFS.java file (replace any code that may already be present).
+
+
+
+
+
+package FCFS;
+
+import java.util.Scanner;
+
+public class FCFS { 
+    int Count = 0; 
+    int[][] processData;
+    Scanner scan = new Scanner(System.in);
+
+    // Method to perform FCFS Scheduling
+    public void scheduleFCFS() {
+        processData[0][2] = 0; // Waiting time for the first process is 0
+        processData[0][3] = processData[0][1]; // Turnaround time for the first process = burst time
+
+        for (int i = 1; i < Count; i++) { 
+            processData[i][2] = processData[i - 1][3]; // Waiting time of current process is the turnaround time of the previous process
+            processData[i][3] = processData[i][1] + processData[i][2]; // Turnaround time = burst time + waiting time
+        }
+    }
+
+    // Method to input values for processes
+    public void setValue() {
+        System.out.print("Enter Number of Processes: ");
+        Count = scan.nextInt(); 
+        processData = new int[Count][4]; 
+
+        // Input burst time and initialize waiting and turnaround time
+        for (int i = 0; i < Count; i++) {
+            System.out.print("Enter Burst Time for Process [" + i + "]: ");
+            processData[i][0] = i; // Process ID
+            processData[i][1] = scan.nextInt(); // Burst time
+            processData[i][2] = 0; // Initial waiting time = 0
+            processData[i][3] = processData[i][1]; // Initial turnaround time = Burst time
+        }
+    }
+
+    // Method to display the scheduling results
+    public void DisplayValue() {
+        System.out.println("-----------------------------------------------------------------------");
+        System.out.println("Process Number || Burst Time || Waiting Time || Turnaround Time");
+        System.out.println("-----------------------------------------------------------------------");
+
+        for (int i = 0; i < Count; i++) {
+            System.out.println("Process[" + processData[i][0] + "]\t||\t" + processData[i][1] 
+                    + "\t||\t" + processData[i][2] + "\t||\t" + processData[i][3]);
+        }
+        System.out.println("-----------------------------------------------------------------------");
+    }
+
+    // Main method to execute the program
+    public static void main(String[] args) {
+        FCFS fs = new FCFS();
+        fs.setValue();
+        System.out.println("\n\n*********** First Come First Serve (FCFS) Scheduling ***********\n"); 
+        System.out.println("Before Scheduling:");
+        fs.DisplayValue();
+
+        fs.scheduleFCFS();
+        System.out.println("\nAfter Scheduling:");
+        fs.DisplayValue();
+    }
+}
+
+
+Step 6: Run the Program
+Save the file by pressing Ctrl + S (Windows) or Cmd + S (Mac).
+Right-click inside the FCFS.java editor window.
+Select Run As > Java Application.
+
+Step 7: Input Data in Console
+In the Eclipse console at the bottom, you’ll be prompted to enter the number of processes and their burst times.
+Enter each value when prompted, and press Enter after each input.
+
+Step 8: View Output
+The program will display the scheduling details before and after applying the FCFS scheduling algorithm.
+Check the output to ensure it matches your expectations for FCFS scheduling.
+
+
+
+
+Sample Input and Output
+Sample Input:
+
+less
+Copy code
+Enter Number of Processes: 3
+Enter Burst Time for Process [0]: 5
+Enter Burst Time for Process [1]: 8
+Enter Burst Time for Process [2]: 12
+Sample Output:
+
+markdown
+Copy code
+*********** First Come First Serve (FCFS) Scheduling ***********
+
+Before Scheduling:
+-----------------------------------------------------------------------
+Process Number || Burst Time || Waiting Time || Turnaround Time
+-----------------------------------------------------------------------
+Process[0]    ||    5        ||    0        ||    5
+Process[1]    ||    8        ||    0        ||    8
+Process[2]    ||    12       ||    0        ||    12
+-----------------------------------------------------------------------
+
+After Scheduling:
+-----------------------------------------------------------------------
+Process Number || Burst Time || Waiting Time || Turnaround Time
+-----------------------------------------------------------------------
+Process[0]    ||    5        ||    0        ||    5
+Process[1]    ||    8        ||    5        ||    13
+Process[2]    ||    12       ||    13       ||    25
+-----------------------------------------------------------------------

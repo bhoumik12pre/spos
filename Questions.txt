@@ -1,0 +1,70 @@
+Here are some potential questions and answers for each problem statement you provided:
+
+### Q1: Two-Pass Assembler - Pass I
+1. **Question:** What is the role of Pass I in a two-pass assembler?
+   - **Answer:** Pass I of a two-pass assembler generates the intermediate code (IC), creates the symbol table (ST), and performs the location counter updates. It resolves addresses of labels and pseudo-operations but doesn't handle unresolved symbols fully until Pass II.
+
+2. **Question:** What are the key data structures used in Pass I of the two-pass assembler?
+   - **Answer:** Key data structures include the Symbol Table (ST) for labels, the Literal Table (LT) for literals, the Intermediate Code (IC) table, and the Location Counter (LC) for address generation.
+
+3. **Question:** Describe how literals are handled in Pass I of the assembler.
+   - **Answer:** In Pass I, literals are noted in the Literal Table with placeholders but are not assigned actual addresses. The addresses are assigned in Pass II, after encountering the LTORG directive or at the END directive.
+
+### Q2: Two-Pass Assembler - Pass II
+1. **Question:** What additional tasks are performed by Pass II of the two-pass assembler?
+   - **Answer:** Pass II replaces symbolic addresses with actual addresses using the symbol and literal tables created in Pass I, resolves any forward references, and generates the final machine code.
+
+2. **Question:** How are literals assigned addresses in Pass II?
+   - **Answer:** Addresses for literals are assigned based on the LTORG directive or at the end of the program. Each literal is assigned consecutive memory locations as per the location counter.
+
+### Q3: Two-Pass Macro-Processor - Pass I
+1. **Question:** What is the function of Pass I in a two-pass macro-processor?
+   - **Answer:** Pass I of a two-pass macro-processor defines macros, expands macro definitions into a macro definition table (MDT), maintains the macro name table (MNT), and stores positional and keyword parameters.
+
+2. **Question:** Explain the use of positional and keyword parameters in macros.
+   - **Answer:** Positional parameters are placeholders replaced by actual parameters based on position in the invocation, while keyword parameters are matched by name, allowing for default values to be specified within the macro.
+
+### Q4: Two-Pass Macro-Processor - Pass II
+1. **Question:** What does Pass II of a two-pass macro-processor accomplish?
+   - **Answer:** Pass II expands macro invocations using MDT and MNT, substituting actual parameters for formal parameters in the macro body to generate the final expanded code.
+
+2. **Question:** How does Pass II handle nested macros?
+   - **Answer:** Pass II processes nested macros by recognizing each macro invocation and recursively expanding macros as per their definitions in the MDT and MNT.
+
+### Q5-Q8: CPU Scheduling Algorithms
+#### Q5: FCFS
+1. **Question:** What is the First-Come, First-Served (FCFS) scheduling algorithm?
+   - **Answer:** FCFS is a non-preemptive scheduling algorithm where the process that arrives first is executed first. It's simple but can cause a high average waiting time.
+
+2. **Question:** Mention one disadvantage of the FCFS algorithm.
+   - **Answer:** FCFS can lead to the "convoy effect," where shorter processes wait for longer processes to complete, resulting in higher waiting times.
+
+#### Q6: SJF (Preemptive)
+1. **Question:** What distinguishes Preemptive SJF from Non-Preemptive SJF?
+   - **Answer:** In Preemptive SJF, the CPU can switch to a new process if it has a shorter burst time than the current process. In Non-Preemptive SJF, once a process starts, it completes without interruption.
+
+2. **Question:** What is a major drawback of SJF scheduling?
+   - **Answer:** SJF can lead to starvation for longer processes if shorter processes continue to arrive.
+
+#### Q7: Priority (Non-Preemptive)
+1. **Question:** Explain the Priority (Non-Preemptive) scheduling algorithm.
+   - **Answer:** In Priority (Non-Preemptive) scheduling, processes are executed based on priority levels. The process with the highest priority (lowest number) is executed first.
+
+2. **Question:** What is the risk associated with Priority scheduling?
+   - **Answer:** Priority scheduling may lead to starvation of low-priority processes, as higher-priority processes can continuously occupy the CPU.
+
+#### Q8: Round Robin (Preemptive)
+1. **Question:** How does Round Robin scheduling work?
+   - **Answer:** In Round Robin, each process is assigned a fixed time slice or quantum. Processes are executed in a circular order, switching after each time quantum until all processes are completed.
+
+2. **Question:** What is an advantage of Round Robin over FCFS?
+   - **Answer:** Round Robin reduces the waiting time for short processes and improves system responsiveness by preventing any single process from monopolizing the CPU.
+
+### Q9: Page Replacement Algorithms
+1. **Question:** Why are page replacement algorithms important in operating systems?
+   - **Answer:** Page replacement algorithms manage memory by swapping pages in and out of physical memory, optimizing performance when memory is limited.
+
+2. **Question:** Explain the concept of "page fault" in page replacement.
+   - **Answer:** A page fault occurs when a program accesses a page not currently in memory, requiring the OS to load the page, possibly replacing another page based on the page replacement policy.
+
+These questions and answers cover core concepts and possible exam questions on each topic in your problem statements.
